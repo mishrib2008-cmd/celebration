@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Dhruu ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(120deg, #ff758c, #ff7eb3);
+    height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    margin-top: 10vh;
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.hidden { display: none; }
+
+h1 { font-size: 2.4em; }
+
+button {
+    padding: 12px 26px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.accept {
+    background: #ff2f6d;
+    color: white;
+}
+
+.reject {
+    background: white;
+    color: #ff2f6d;
+    position: absolute;
+}
+
+#letter {
+    text-align: left;
+    white-space: pre-line;
+    min-height: 220px;
+}
+
+.song button {
+    background: rgba(255,255,255,0.95);
+    color: #c9184a;
+    width: 100%;
+    margin: 6px 0;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Music (auto plays after interaction) -->
+<audio id="bgMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+
+    <div class="card" id="step1">
+        <h1>Happy Birthday, Dhruu 🎂</h1>
+        <p>This little surprise carries my heart inside it…</p>
+        <button class="accept" onclick="nextStep()">Continue ❤️</button>
+    </div>
+
+    <div class="card hidden" id="step2">
+        <h1>Dhruu, Will You Be Mine Forever? 💍</h1>
+        <button class="accept" onclick="acceptLove()">Accept ❤️</button>
+        <button class="reject" id="reject">🧸 Reject</button>
+    </div>
+
+    <div class="card hidden" id="step3">
+        <h1>My Love Letter 💌</h1>
+        <div id="letter"></div>
+
+        <h2>Play Our Song 🎶</h2>
+        <div class="song">
+            <button onclick="playSong('450p7goxZqg')">Raabta</button>
+            <button onclick="playSong('WWXm39leYew')">Tum Hi Ho</button>
+            <button onclick="playSong('lN1m7zLBbSU')">Kesariya</button>
+        </div>
+
+        <div id="player"></div>
+    </div>
+
+</div>
+
+<script>
+/* Step control */
+function nextStep() {
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+}
+
+/* Reject button escape */
+const reject = document.getElementById('reject');
+reject.addEventListener('mouseover', moveReject);
+reject.addEventListener('click', moveReject);
+
+function moveReject() {
+    reject.style.left = Math.random() * (window.innerWidth - 120) + 'px';
+    reject.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+}
+
+/* Accept action */
+function acceptLove() {
+    document.getElementById('step2').classList.add('hidden');
+    document.getElementById('step3').classList.remove('hidden');
+
+    document.getElementById('bgMusic').play();
+    startFireworks();
+    typeWriter();
+}
+
+/* Typewriter effect */
+const text = `Dhruu,
+
+From the moment you entered my life, everything changed.
+Your smile feels like home, your laughter feels like peace,
+and your presence feels like destiny.
+
+I may not be perfect, but my love for you is pure,
+honest, and endless.
+
+On your birthday, and every day after,
+I choose you.
+Always.
+
+With all my heart ❤️`;
+
+let i = 0;
+function typeWriter() {
+    if (i < text.length) {
+        document.getElementById("letter").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 40);
+    }
+}
+
+/* YouTube player */
+function playSong(id) {
+    document.getElementById('player').innerHTML =
+        `<iframe width="100%" height="200"
+        src="https://www.youtube.com/embed/${id}?autoplay=1"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+}
+
+/* Fireworks */
+const canvas = document.getElementById('fireworks');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let fireworks = [];
+
+function startFireworks() {
+    setInterval(() => {
+        fireworks.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height / 2,
+            r: 0,
+            alpha: 1
+        });
+    }, 300);
+}
+
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    fireworks.forEach((f, index) => {
+        f.r += 2;
+        f.alpha -= 0.02;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${f.alpha})`;
+        ctx.stroke();
+        if (f.alpha <= 0) fireworks.splice(index,1);
+    });
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
